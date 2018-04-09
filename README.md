@@ -1,2 +1,2 @@
 # WeatherNewsMvvm
-Simple application to illustrates MVVM with LiveData
+Sample application that illustrates MVVM with LiveData
