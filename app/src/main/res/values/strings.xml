@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Multiple Live Data</string>
+
+    <string name="news_header">News</string>
+
+    <string name="dialog_title_category">Category</string>
+    <string name="dialog_title_section">Section</string>
+    <string name="dialog_title_time">Time</string>
+    <string name="dialog_news_title">Filter News</string>
+    <string name="dialog_positive_text">Submit</string>
+    <string name="dialog_negative_text">Cancel</string>
+
+    <string-array name="category_list">
+        <item>Most Viewed</item>
+        <item>Most Emailed</item>
+        <item>Most Shared</item>
+    </string-array>
+
+    <string-array name="section_list">
+        <item>All</item>
+        <item>Books</item>
+        <item>Food</item>
+        <item>Movies</item>
+        <item>Sports</item>
+    </string-array>
+
+    <string-array name="time_list">
+        <item>Day</item>
+        <item>Week</item>
+        <item>Month</item>
+    </string-array>
+
+</resources>
