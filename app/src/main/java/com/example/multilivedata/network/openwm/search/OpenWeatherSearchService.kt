@@ -1,9 +1,8 @@
 package com.example.multilivedata.network.openwm.search
 
+import com.example.multilivedata.network.common.Response
 import retrofit2.Call
-import retrofit2.Response
-
 
 interface OpenWeatherSearchService {
-    fun searchCitiesByName(cityName: String): Call<Response<Object>>
+    fun searchCitiesByName(cityName: String): Call<Response<SearchListing>>
 }

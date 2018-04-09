@@ -50,7 +50,7 @@ class NewsViewModel @Inject constructor(private val apiClient: NytMostPopularSer
             }
 
             override fun onFailure(call: Call<NewsResponse>?, t: Throwable?) {
-                news.postValue(Response.hasFailed(t))
+                news.postValue(Response.hasFailed(null, t))
             }
         })
     }

@@ -1,6 +1,9 @@
 package com.example.multilivedata.network.nytimes.mostpopular
 
 import com.example.multilivedata.network.common.Response
+import com.example.multilivedata.network.common.Response.Helper.FETCH_EMPTY
+import com.example.multilivedata.network.common.Response.Helper.FETCH_FAILED
+import com.example.multilivedata.network.common.Response.Helper.FETCH_SUCCESSFUL
 import com.example.multilivedata.network.common.ResponseStatus
 import com.google.gson.*
 import java.lang.reflect.Type
@@ -10,20 +13,16 @@ class NytCustomDeserializer : JsonDeserializer<Response<MostPopularListing>> {
     companion object {
         const val STATUS_ERROR = "ERROR"
         const val STATUS_OK = "OK"
-
-        const val FETCH_SUCCESSFUL = "Result Successful"
-        const val FETCH_FAILED = "Failed to Fetch"
-        const val FETCH_EMPTY = "No results found"
     }
 
     override fun deserialize(json: JsonElement?, typeOfT: Type?, context: JsonDeserializationContext?): Response<MostPopularListing> {
         if (json == null) {
-            return buildErrorResponse(null)
+            return buildErrorResponse(FETCH_FAILED)
         }
 
         val obj = json.asJsonObject
 
-        val status = obj.getAsJsonPrimitive("status") ?: return buildErrorResponse(null)
+        val status = obj.getAsJsonPrimitive("status") ?: return buildErrorResponse(FETCH_FAILED)
 
         if (status.asString == STATUS_ERROR) {
             val errorList = obj.getAsJsonArray("errors")
@@ -37,7 +36,7 @@ class NytCustomDeserializer : JsonDeserializer<Response<MostPopularListing>> {
             }
         }
 
-        return buildErrorResponse(null)
+        return buildErrorResponse(FETCH_FAILED)
     }
 
     private fun buildSuccessfulResponse(result: JsonObject): Response<MostPopularListing> {
@@ -60,14 +59,9 @@ class NytCustomDeserializer : JsonDeserializer<Response<MostPopularListing>> {
             return buildErrorResponse(errorMessage)
         }
 
-        return buildErrorResponse(null)
+        return buildErrorResponse(FETCH_FAILED)
     }
 
-    private fun buildErrorResponse(msg: String?): Response<MostPopularListing> {
-        return Response(
-                null,
-                FETCH_FAILED,
-                if (msg == null || msg.isBlank()) Exception() else Exception(msg),
-                ResponseStatus.ERROR)
-    }
+    private fun buildErrorResponse(msg: String?) = Response.hasFailed(msg, null)
+
 }

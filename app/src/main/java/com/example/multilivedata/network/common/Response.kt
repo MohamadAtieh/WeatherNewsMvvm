@@ -18,9 +18,13 @@ data class Response<out T>(
         override val responseStatus: ResponseStatus
 ) : ResponseStatusInterface {
     companion object Helper {
+        const val FETCH_SUCCESSFUL = "Result Successful"
+        const val FETCH_FAILED = "Failed to Fetch"
+        const val FETCH_EMPTY = "No results found"
+
         fun isLoading() = Response(null, null, null, ResponseStatus.LOADING)
 
-        fun hasFailed(throwable: Throwable?)
-            = Response(null, null, Exception(throwable), ResponseStatus.ERROR)
+        fun hasFailed(msg: String?, throwable: Throwable?)
+            = Response(null, msg, Exception(throwable), ResponseStatus.ERROR)
     }
 }
