@@ -11,6 +11,7 @@ import dagger.Component
 interface MainComponent {
     fun getContext() : Context
     fun getInjector() : MainInjector
+    fun getMainViewModel(): MainViewModel
 
     // have to be declared here
     fun plusWeatherComponent() : WeatherComponent

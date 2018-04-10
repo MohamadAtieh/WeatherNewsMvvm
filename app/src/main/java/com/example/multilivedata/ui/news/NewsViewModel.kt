@@ -1,10 +1,7 @@
 package com.example.multilivedata.ui.news
 
-import android.arch.lifecycle.LiveData
 import android.arch.lifecycle.MutableLiveData
-import android.arch.lifecycle.Transformations
 import com.example.multilivedata.network.common.Response
-import com.example.multilivedata.network.common.ResponseStatus
 import com.example.multilivedata.network.nytimes.common.CategoryDef
 import com.example.multilivedata.network.nytimes.mostpopular.MostPopularListing
 import com.example.multilivedata.network.nytimes.mostpopular.NytMostPopularService
@@ -15,13 +12,10 @@ import javax.inject.Inject
 typealias NewsResponse = Response<MostPopularListing>
 typealias RetrofitResponse = retrofit2.Response<NewsResponse>
 
-@NewsScope
 class NewsViewModel @Inject constructor(private val apiClient: NytMostPopularService) {
-    private val news = MutableLiveData<NewsResponse>()
+    val news = MutableLiveData<NewsResponse>()
 
     var newsFilter = NewsFilter() // default filter
-    val listing: LiveData<MostPopularListing> = Transformations.map(news, NewsResponse::data)
-    val responseStatus: LiveData<ResponseStatus> = Transformations.map(news, NewsResponse::responseStatus)
 
     fun fetchNews() {
         performCall()
@@ -44,7 +38,12 @@ class NewsViewModel @Inject constructor(private val apiClient: NytMostPopularSer
         news.value = Response.isLoading()
         call.enqueue(object : Callback<NewsResponse> {
             override fun onResponse(call: Call<NewsResponse>?, response: RetrofitResponse?) {
-                val responseBody = response?.body() ?: return
+                val responseBody = response?.body()
+
+                if (responseBody == null) {
+                    news.postValue(Response.hasFailed(Throwable()))
+                    return
+                }
 
                 news.postValue(responseBody)
             }
@@ -54,11 +53,5 @@ class NewsViewModel @Inject constructor(private val apiClient: NytMostPopularSer
             }
         })
     }
-
-    fun mapToNewsItem(it: MostPopularListing): List<NewsItem>
-        = it.results.map {
-            val imgUrl = it.media.firstOrNull()?.metadata?.lastOrNull()?.url ?: ""
-            NewsItem(it.title, imgUrl, it.url)
-        }
 }
 

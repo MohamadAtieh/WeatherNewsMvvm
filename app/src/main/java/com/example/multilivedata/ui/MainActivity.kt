@@ -19,7 +19,7 @@ class MainActivity
 : AppCompatActivity(), NewsFeedView.NewsFeedListener, NewsFilterDialogFragment.NewsFilterDialogListener {
 
     private lateinit var binding: MainContainerBinding
-    private lateinit var newsViewModel: NewsViewModel
+    private lateinit var mainViewModel: MainViewModel
     private var mainComponent: MainComponent? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,49 +41,52 @@ class MainActivity
                 .mainModule(MainModule())
                 .build()
 
-        newsViewModel = mainComponent?.getInjector()?.plusNewsComponent()?.getNewsViewModel() ?: return
+        mainViewModel = mainComponent?.getMainViewModel() ?: return
     }
 
     private fun setupViews() {
         binding.refreshLayout.setOnRefreshListener { fetch() }
-        binding.newsListView.listener = this
+
+        binding.upperNewsListView.listener = this
+
+        binding.newsListView.news_header_view.visibility = GONE
+        binding.newsListView.news_filter_view.visibility = GONE
     }
 
     private fun bindViewModel() {
-        newsViewModel.listing.observe(this, Observer {
+        mainViewModel.mediatorLiveData.observe(this, Observer {
             if (it == null) return@Observer
 
-            // todo separate view model
-            binding.upperNewsListView.setItems(newsViewModel.mapToNewsItem(it))
-            binding.upperNewsListView.news_header_view.visibility = GONE
-            binding.upperNewsListView.news_filter_view.visibility = GONE
-
-            binding.newsListView.setItems(newsViewModel.mapToNewsItem(it))
-        })
-
-        newsViewModel.responseStatus.observe(this, Observer {
-            binding.refreshLayout.isRefreshing = when (it) {
+            val responseStatus = it.responseStatus
+            binding.refreshLayout.isRefreshing = when (responseStatus) {
                 ResponseStatus.HAS_CONTENT, ResponseStatus.ERROR, ResponseStatus.NO_CONTENT -> false
                 ResponseStatus.LOADING -> true
-                else -> false
+            }
+
+            it.hNews?.data?.let { data ->
+                binding.upperNewsListView.setItems(mainViewModel.mapToNewsItem(data))
+            }
+
+            it.vNews?.data?.let { data ->
+                binding.newsListView.setItems(mainViewModel.mapToNewsItem(data))
             }
         })
     }
 
-    private fun fetch() = newsViewModel.fetchNews() // default call
+    private fun fetch() = mainViewModel.fetch()
 
     override fun onDestroy() {
         super.onDestroy()
 
-        mainComponent?.getInjector()?.clearNewsComponent()
+        mainViewModel.clearComponents()
     }
 
     override fun onFilterClick() {
         with (NewsFilterDialogFragment()) {
-            arguments = Bundle().apply { putParcelable(NewsFilterDialogFragment.NEWS_FILTER_KEY, newsViewModel.newsFilter) }
+            arguments = Bundle().apply { putParcelable(NewsFilterDialogFragment.NEWS_FILTER_KEY, mainViewModel.getNewsFilter()) }
             show(supportFragmentManager, "news_filter")
         }
     }
 
-    override fun onFilterSubmit(filter: NewsFilter) = newsViewModel.fetchNews(filter)
+    override fun onFilterSubmit(filter: NewsFilter) = mainViewModel.fetch(filter)
 }

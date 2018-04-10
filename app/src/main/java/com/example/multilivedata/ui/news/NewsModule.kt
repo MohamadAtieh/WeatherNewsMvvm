@@ -9,4 +9,7 @@ import dagger.Provides
 class NewsModule {
     @Provides @NewsScope
     fun provideNytApiClient(): NytMostPopularService = NytMostPopularApiClient()
+
+    @Provides
+    fun provideNewsViewModel(apiClient: NytMostPopularService) = NewsViewModel(apiClient)
 }
