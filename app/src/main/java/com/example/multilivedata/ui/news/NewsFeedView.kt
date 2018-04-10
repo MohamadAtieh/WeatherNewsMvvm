@@ -5,31 +5,68 @@ import android.support.constraint.ConstraintLayout
 import android.support.v7.widget.LinearLayoutManager
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import com.example.multilivedata.R
 import com.example.multilivedata.databinding.ListViewNewsBinding
 
-class NewsFeedView(
-        context: Context,
-        attrs : AttributeSet?,
-        defStyleAttr: Int
-) : ConstraintLayout(context, attrs, defStyleAttr) {
+class NewsFeedView : ConstraintLayout {
+
+    enum class ListingOrientation {
+        VERTICAL,
+        HORIZONTAL
+    }
 
     interface NewsFeedListener {
         fun onFilterClick()
     }
 
-    private val binding: ListViewNewsBinding = ListViewNewsBinding.inflate(LayoutInflater.from(context), this, true)
-    private val adapter = NewsAdapter()
-    private val layoutManager = LinearLayoutManager(context)
-    var listener: NewsFeedListener? = null
+    companion object {
+        private const val VERTICAL = 0
+        private const val HORIZONTAL = 1
+    }
 
-    constructor(context: Context) : this(context, null, 0)
+    private val binding: ListViewNewsBinding = ListViewNewsBinding.inflate(LayoutInflater.from(context), this, true)
+
+    private var listOrientation: ListingOrientation = ListingOrientation.VERTICAL
+        set(value) {
+            field = value
+
+            val orientation = when (value) {
+                ListingOrientation.VERTICAL -> LinearLayoutManager.VERTICAL
+                ListingOrientation.HORIZONTAL -> LinearLayoutManager.HORIZONTAL
+            }
+
+            layoutManager = LinearLayoutManager(context, orientation, false)
+            setupRecyclerView()
+        }
+
+    var listener: NewsFeedListener? = null
+    private val adapter = NewsAdapter()
+    private lateinit var layoutManager: LinearLayoutManager
+
+    constructor(context: Context) : super(context)
 
     constructor(context: Context,
-                attrs : AttributeSet?) : this(context, attrs, 0)
+                attrs : AttributeSet?) : super(context, attrs) {
+        val attributes = context.theme.obtainStyledAttributes(
+                attrs,
+                R.styleable.NewsFeedView,
+                0,
+                0
+        )
+
+        try {
+            val value = attributes.getInteger(R.styleable.NewsFeedView_orientation, VERTICAL)
+            listOrientation = when (value) {
+                VERTICAL -> ListingOrientation.VERTICAL
+                HORIZONTAL -> ListingOrientation.HORIZONTAL
+                else -> ListingOrientation.VERTICAL
+            }
+        } finally {
+            attributes.recycle()
+        }
+    }
 
     init {
-        setupRecyclerView()
-
         binding.newsFilterView.setOnClickListener { listener?.onFilterClick() }
     }
 

@@ -4,6 +4,7 @@ import android.arch.lifecycle.Observer
 import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
+import android.view.View.GONE
 import com.example.multilivedata.App
 import com.example.multilivedata.R
 import com.example.multilivedata.databinding.MainContainerBinding
@@ -12,6 +13,7 @@ import com.example.multilivedata.ui.news.NewsFeedView
 import com.example.multilivedata.ui.news.NewsFilter
 import com.example.multilivedata.ui.news.NewsFilterDialogFragment
 import com.example.multilivedata.ui.news.NewsViewModel
+import kotlinx.android.synthetic.main.list_view_news.view.*
 
 class MainActivity
 : AppCompatActivity(), NewsFeedView.NewsFeedListener, NewsFilterDialogFragment.NewsFilterDialogListener {
@@ -50,6 +52,11 @@ class MainActivity
     private fun bindViewModel() {
         newsViewModel.listing.observe(this, Observer {
             if (it == null) return@Observer
+
+            // todo separate view model
+            binding.upperNewsListView.setItems(newsViewModel.mapToNewsItem(it))
+            binding.upperNewsListView.news_header_view.visibility = GONE
+            binding.upperNewsListView.news_filter_view.visibility = GONE
 
             binding.newsListView.setItems(newsViewModel.mapToNewsItem(it))
         })

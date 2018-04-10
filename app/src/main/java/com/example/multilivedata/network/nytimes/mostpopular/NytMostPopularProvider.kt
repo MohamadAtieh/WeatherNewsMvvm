@@ -12,7 +12,7 @@ import retrofit2.http.Query
 interface NytMostPopularProvider {
 
     companion object {
-        const val BASE_URL = "https://api.nytimes.com/svc/mostpopular/v2"
+        const val BASE_URL = "https://api.nytimes.com/svc/mostpopular/v2/"
         const val API_KEY = "53827735437849d2ba01cd304c9e8982"
 
         private const val PATH_CATEGORY = "category"
@@ -21,7 +21,7 @@ interface NytMostPopularProvider {
         private const val QUERY_API_KEY = "api-key"
     }
 
-    @GET("/{$PATH_CATEGORY}/{$PATH_SECTION}/{$PATH_TIME_PERIOD}")
+    @GET("{$PATH_CATEGORY}/{$PATH_SECTION}/{$PATH_TIME_PERIOD}")
     fun getMostPopularNews(
             @Path(PATH_CATEGORY) @Category category: String,
             @Path(PATH_SECTION) @Section section: String,

@@ -17,7 +17,7 @@ interface OpenWeatherSearchProvider {
         private const val QUERY_SEARCH_TYPE_DEFAULT_VALUE = "like"
     }
 
-    @GET("/$PATH_FIND")
+    @GET(PATH_FIND)
     fun searchCities(
             @Query(QUERY_Q) cityName: String,
             @Query(QUERY_SEARCH_TYPE) searchType: String = QUERY_SEARCH_TYPE_DEFAULT_VALUE,

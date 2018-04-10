@@ -14,7 +14,7 @@ interface OpenWeatherForecastProvider {
         private const val QUERY_ID = "id"
     }
 
-    @GET("/$PATH_FORECAST")
+    @GET(PATH_FORECAST)
     fun getForecastByCityId(
             @Query(QUERY_ID) cityId: String,
             @Query(QUERY_API_KEY) apiKey: String = API_KEY
