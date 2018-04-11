@@ -45,7 +45,7 @@ class NewsFilterDialogFragment : AppCompatDialogFragment() {
     @SuppressLint("InflateParams")
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialogBuilder = AlertDialog.Builder(activity).apply {
-            val view = activity.layoutInflater.inflate(R.layout.dialog_news_filter, null)
+            val view = activity?.layoutInflater?.inflate(R.layout.dialog_news_filter, null) ?: return@apply
             setupViews(view)
             setView(view)
 
@@ -153,5 +153,5 @@ class NewsFilterDialogFragment : AppCompatDialogFragment() {
         dialog.dismiss()
     }
 
-    private fun getNewsFilter() = arguments.getParcelable(NEWS_FILTER_KEY) as? NewsFilter ?: NewsFilter()
+    private fun getNewsFilter() = arguments?.getParcelable(NEWS_FILTER_KEY) as? NewsFilter ?: NewsFilter()
 }
