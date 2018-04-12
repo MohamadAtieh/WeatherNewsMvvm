@@ -5,18 +5,13 @@ import android.databinding.DataBindingUtil
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.view.View
-import android.view.View.GONE
 import com.example.multilivedata.App
 import com.example.multilivedata.R
-import com.example.multilivedata.databinding.MainContainerBinding
 import com.example.multilivedata.databinding.NewMainContainerBinding
 import com.example.multilivedata.network.common.ResponseStatus
 import com.example.multilivedata.ui.epoxy.NewsController
-import com.example.multilivedata.ui.news.NewsFeedView
 import com.example.multilivedata.ui.news.NewsFilter
 import com.example.multilivedata.ui.news.NewsFilterDialogFragment
-import com.example.multilivedata.ui.news.NewsViewModel
-import kotlinx.android.synthetic.main.list_view_news.view.*
 
 class MainActivity
 : AppCompatActivity(), NewsFilterDialogFragment.NewsFilterDialogListener {
@@ -60,7 +55,7 @@ class MainActivity
 
     private fun setupViews() {
         binding.refreshLayout.setOnRefreshListener { fetch() }
-        binding.recyclerView.setControllerAndBuildModels(controller)
+        binding.recyclerView.setController(controller)
     }
 
     private fun bindViewModel() {
@@ -73,16 +68,10 @@ class MainActivity
                 ResponseStatus.LOADING -> true
             }
 
-            it.hNews?.data?.let { data ->
-                controller.hNews = mainViewModel.mapToNewsItem(data)
-                controller.requestModelBuild()
-            }
+            val hNews = it.hNews?.data?.let { mainViewModel.mapToNewsItem(it) }
+            val vNews = it.vNews?.data?.let { mainViewModel.mapToNewsItem(it) }
 
-            it.vNews?.data?.let { data ->
-                controller.vNews = mainViewModel.mapToNewsItem(data)
-                controller.requestModelBuild()
-            }
-
+            controller.setData(hNews, vNews)
         })
     }
 

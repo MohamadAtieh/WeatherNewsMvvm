@@ -82,6 +82,6 @@ class MainViewModel @Inject constructor(private val mainInjector: MainInjector) 
     fun mapToNewsItem(it: MostPopularListing): List<NewsItem>
             = it.results.map {
         val imgUrl = it.media.firstOrNull()?.metadata?.lastOrNull()?.url ?: ""
-        NewsItem(it.title, imgUrl, it.url)
+        NewsItem(it.id, it.title, imgUrl, it.url)
     }
 }

@@ -7,7 +7,7 @@ import android.view.ViewGroup
 import com.example.multilivedata.databinding.ItemViewNewsBinding
 import com.example.multilivedata.network.common.GlideApp
 
-data class NewsItem(val title: String?, val imageUrl: String?, val url: String?)
+data class NewsItem(val id: Long?, val title: String?, val imageUrl: String?, val url: String?)
 
 class NewsViewHolder(binding: ItemViewNewsBinding)
     : RecyclerView.ViewHolder(binding.root) {

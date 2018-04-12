@@ -15,5 +15,4 @@ class NewsHeaderModel(
     override fun setDataBindingVariables(binding: ViewDataBinding?) {
         (binding as? NewListViewNewsBinding)?.newsFilterView?.setOnClickListener(clickListener)
     }
-
 }
