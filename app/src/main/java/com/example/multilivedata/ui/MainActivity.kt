@@ -7,16 +7,16 @@ import android.support.v7.app.AppCompatActivity
 import android.view.View
 import com.example.multilivedata.App
 import com.example.multilivedata.R
-import com.example.multilivedata.databinding.NewMainContainerBinding
+import com.example.multilivedata.databinding.MainContainerBinding
 import com.example.multilivedata.network.common.ResponseStatus
-import com.example.multilivedata.ui.epoxy.NewsController
+import com.example.multilivedata.ui.news.NewsController
 import com.example.multilivedata.ui.news.NewsFilter
 import com.example.multilivedata.ui.news.NewsFilterDialogFragment
 
 class MainActivity
 : AppCompatActivity(), NewsFilterDialogFragment.NewsFilterDialogListener {
 
-    private lateinit var binding: NewMainContainerBinding
+    private lateinit var binding: MainContainerBinding
     private lateinit var mainViewModel: MainViewModel
     private var mainComponent: MainComponent? = null
 
@@ -34,7 +34,7 @@ class MainActivity
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = DataBindingUtil.setContentView(this, R.layout.new_main_container)
+        binding = DataBindingUtil.setContentView(this, R.layout.main_container)
 
         setupComponent()
         setupViews()

@@ -1,9 +1,12 @@
-package com.example.multilivedata.ui.epoxy
+package com.example.multilivedata.ui.news
 
 import android.view.View
 import com.airbnb.epoxy.CarouselModel_
 import com.airbnb.epoxy.Typed2EpoxyController
-import com.example.multilivedata.ui.news.NewsItem
+import com.example.multilivedata.ui.news.models.NewsHeaderModel
+import com.example.multilivedata.ui.news.models.NewsItemModel
+
+data class NewsItem(val id: Long?, val title: String?, val imageUrl: String?, val url: String?)
 
 class NewsController: Typed2EpoxyController<List<NewsItem>, List<NewsItem>>() {
 

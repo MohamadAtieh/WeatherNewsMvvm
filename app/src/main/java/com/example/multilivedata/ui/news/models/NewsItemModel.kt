@@ -1,4 +1,4 @@
-package com.example.multilivedata.ui.epoxy
+package com.example.multilivedata.ui.news.models
 
 import android.databinding.ViewDataBinding
 import com.airbnb.epoxy.DataBindingEpoxyModel

@@ -23,25 +23,19 @@ class MainViewModel @Inject constructor(private val mainInjector: MainInjector) 
     val mediatorLiveData = MediatorLiveData<MainPageModel>()
 
     private val newsComponent = mainInjector.plusNewsComponent()
-    private var hNewsViewModel: NewsViewModel = newsComponent.getNewsViewModel()
-    private var vNewsViewModel: NewsViewModel = newsComponent.getNewsViewModel()
+    private var newsViewModel: NewsViewModel = newsComponent.getNewsViewModel()
 
     init {
-        mediatorLiveData.addSource(hNewsViewModel.news, {
+
+        mediatorLiveData.addSource(newsViewModel.news, {
             val pageModel = mediatorLiveData.value ?: return@addSource
             pageModel.hNews = it
+            pageModel.vNews = it //todo replace with weather
             evaluateResponseStatus(pageModel)
 
             mediatorLiveData.value = pageModel
         })
 
-        mediatorLiveData.addSource(vNewsViewModel.news, {
-            val pageModel = mediatorLiveData.value ?: return@addSource
-            pageModel.vNews = it
-            evaluateResponseStatus(pageModel)
-
-            mediatorLiveData.value = pageModel
-        })
     }
 
     private fun evaluateResponseStatus(pageModel: MainPageModel) {
@@ -62,22 +56,20 @@ class MainViewModel @Inject constructor(private val mainInjector: MainInjector) 
     fun fetch() {
         mediatorLiveData.value = MainPageModel(ResponseStatus.LOADING) //initial
 
-        hNewsViewModel.fetchNews()
-        vNewsViewModel.fetchNews()
+        newsViewModel.fetchNews()
     }
 
     fun fetch(filter: NewsFilter) {
         mediatorLiveData.value = MainPageModel(ResponseStatus.LOADING) //initial
 
-        hNewsViewModel.fetchNews(filter)
-        vNewsViewModel.fetchNews(filter)
+        newsViewModel.fetchNews(filter)
     }
 
     fun clearComponents() {
         mainInjector.clearNewsComponent()
     }
 
-    fun getNewsFilter(): Parcelable? = hNewsViewModel.newsFilter // any
+    fun getNewsFilter(): Parcelable? = newsViewModel.newsFilter // any
 
     fun mapToNewsItem(it: MostPopularListing): List<NewsItem>
             = it.results.map {

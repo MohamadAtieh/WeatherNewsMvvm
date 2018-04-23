@@ -10,6 +10,6 @@ class NewsModule {
     @Provides @NewsScope
     fun provideNytApiClient(): NytMostPopularService = NytMostPopularApiClient()
 
-    @Provides
+    @Provides @NewsScope // todo make this a provider
     fun provideNewsViewModel(apiClient: NytMostPopularService) = NewsViewModel(apiClient)
 }
